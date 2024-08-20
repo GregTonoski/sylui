@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="author" content="greg.tonoski@gmail.com">
+    <meta name="author" content="https://zeeg.me/gregtonoski">
+    <meta http-equiv="creation-date" content="2024-07-31T13:00Z">
+    <meta name="description" content="Convert from SylUI to hex code.">
+    <title>Sylui demo example</title>
+    <style>
+      body {
+      font: 1em sans-serif;
+      width: 600px;
+      padding: 0;
+      margin: 0 auto;
+      }
+      
+      form {
+        max-width: 600px;
+      }
+      
+      p * {
+        display: block;
+      }
+      
+      input#userInputText1 {
+        appearance: none;
+        width: 100%;
+        border: 1px solid #333;
+        margin: 0;
+      
+        font-family: monospace, monospace;
+        font-size: 90%;
+      
+        box-sizing: border-box;
+      }
+      
+      input.invalid {
+        border-color: #900;
+        background-color: #fdd;
+      }
+      
+      input:focus:invalid {
+        outline: none;
+      }
+      
+      .error {
+        width: 100%;
+        padding: 0;
+      
+        font-size: 80%;
+        color: white;
+        background-color: #900;
+        border-radius: 0 0 5px 5px;
+        box-sizing: border-box;
+      }
+      
+      .error.active {
+        padding: 0.3em;
+      }
+      
+      output {
+        font-family: monospace, monospace;
+        font-size: 90%;
+      }
+    </style>
+  </head>
+  <body>
+    <form>
+      <p>
+        <label for="userInputText1">
+          <span>Enter SylUI code:</span>
+          <input type="text" id="userInputText1" name="userInputText1" size="10" autocomplete="off" autofocus />
+          <span class="error" aria-live="polite"></span>
+        </label>
+        <span id="textInputCharacters"></span>
+      </p>
+      <button id="btnSubmit">Convert to hex code</button>
+    </form>
+    <p id="outputParagraph">
+    </p>
+    <script>
+      const form = document.querySelector("form");
+      const inputSylUI = document.getElementById("userInputText1");
+      const error = inputSylUI.nextElementSibling;
+      const inputSylUIRegExp = /^[bcdfghjklmnpqrstwxzBCDFGHJKLMNPQRSTWXZ]?\s*(?:[aeyouiAEYOUI]\s*[bcdfghjklmnpqrstwxzBCDFGHJKLMNPQRSTWXZ]?\s*)*$/;
+      const submitRegExp = /^(?:[bcdfghjklmnpqrstwxzBCDFGHJKLMNPQRSTWXZ]?\s*[aeyouiAEYOUI]\s*)*$/;
+      
+      window.addEventListener("load", () => {
+        const isValid = inputSylUI.value.length === 0 || inputSylUIRegExp.test(inputSylUI.value);
+        inputSylUI.className = isValid ? "valid" : "invalid";
+      });
+      
+      inputSylUI.addEventListener("input", () => {
+        document.getElementById("outputParagraph").innerHTML = '';
+        if (inputSylUI.value) {
+          document.getElementById("textInputCharacters").innerHTML = inputSylUI.value.match(/\S/g).length + ' characters in total.';
+        } else {
+          document.getElementById("textInputCharacters").innerHTML = '';
+        }
+        const isValid = inputSylUI.value.length === 0 || inputSylUIRegExp.test(inputSylUI.value);
+        if (isValid) {
+          inputSylUI.className = "valid";
+          error.textContent = "";
+          error.className = "error";
+        } else {
+          inputSylUI.className = "invalid";
+        }
+      });
+      
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+      
+        const isValid = inputSylUI.value.length === 0 || submitRegExp.test(inputSylUI.value);
+        if (!isValid) {
+          inputSylUI.className = "invalid";
+          error.textContent = "Incorrect SylUI code entered.";
+          error.className = "error active";
+        } else {
+          inputSylUI.className = "valid";
+          error.textContent = "";
+          error.className = "error";
+          const numberHex = sylUI2Hex(inputSylUI.value);
+          document.getElementById("outputParagraph").innerHTML = 'Hex code (' + numberHex.match(/\S/g).length + ' characters):<br><output>' + numberHex + '</output>';
+        }
+      });
+      const syllables = ["a", "e", "i", "o", "u", "y", "ba", "be", "bi", "bo", "bu", "by", "ca", "ce", "ci", "co", "cu", "cy", "da", "de", "di", "do", "du", "dy", "fa", "fe", "fi", "fo", "fu", "fy", "ga", "ge", "gi", "go", "gu", "gy", "ha", "he", "hi", "ho", "hu", "hy", "ja", "je", "ji", "jo", "ju", "jy", "ka", "ke", "ki", "ko", "ku", "ky", "la", "le", "li", "lo", "lu", "ly", "ma", "me", "mi", "mo", "mu", "my", "na", "ne", "ni", "no", "nu", "ny", "pa", "pe", "pi", "po", "pu", "py", "qa", "qe", "qi", "qo", "qu", "qy", "ra", "re", "ri", "ro", "ru", "ry", "sa", "se", "si", "so", "su", "sy", "ta", "te", "ti", "to", "tu", "ty", "va", "ve", "vi", "vo", "vu", "vy", "wa", "we", "wi", "wo", "wu", "wy", "xa", "xe", "xi", "xo", "xu", "xy", "za", "ze", "zi", "zo", "zu", "zy"];
+      function sylUI2Hex(sylText) {
+        let number = BigInt(0);
+        let exponent= BigInt(0);
+        let addend = BigInt(0);
+        let radix = BigInt(126);
+        const re = /[bcdfghjklmnpqrstwxzBCDFGHJKLMNPQRSTWXZ]?\s*[aeyouiAEYOUI]/g ;
+        sylText = sylText.replaceAll(/\s/g , "");
+        const digits = sylText.match(re);
+        exponent = BigInt(digits.length - 1);
+        for (const digit of digits) {
+          addend = BigInt(syllables.indexOf(digit));
+          addend = addend*radix**exponent;
+          number = number + addend;
+          exponent--;
+          addend = 0;
+        }
+        return number.toString(16);
+      }
+    </script>
+  </body>
+</html>
