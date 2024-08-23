@@ -84,8 +84,8 @@
       const form = document.querySelector("form");
       const inputSylUI = document.getElementById("userInputText1");
       const error = inputSylUI.nextElementSibling;
-      const inputSylUIRegExp = /^[bcdfghjklmnpqrstwxzBCDFGHJKLMNPQRSTWXZ]?\s*(?:[aeyouiAEYOUI]\s*[bcdfghjklmnpqrstwxzBCDFGHJKLMNPQRSTWXZ]?\s*)*$/;
-      const submitRegExp = /^(?:[bcdfghjklmnpqrstwxzBCDFGHJKLMNPQRSTWXZ]?\s*[aeyouiAEYOUI]\s*)*$/;
+      const inputSylUIRegExp = /^[bcdfghjklmnpqrstvwxzBCDFGHJKLMNPQRSTVWXZ]?\s*(?:[aeyouiAEYOUI]\s*[bcdfghjklmnpqrstvwxzBCDFGHJKLMNPQRSTVWXZ]?\s*)*$/;
+      const submitRegExp = /^(?:[bcdfghjklmnpqrstvwxzBCDFGHJKLMNPQRSTVWXZ]?\s*[aeyouiAEYOUI]\s*)*$/;
       
       window.addEventListener("load", () => {
         const isValid = inputSylUI.value.length === 0 || inputSylUIRegExp.test(inputSylUI.value);
