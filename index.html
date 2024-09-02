@@ -136,7 +136,7 @@
         let exponent= BigInt(0);
         let addend = BigInt(0);
         let radix = BigInt(126);
-        const re = /[bcdfghjklmnpqrstwxzBCDFGHJKLMNPQRSTWXZ]?\s*[aeyouiAEYOUI]/g ;
+        const re = /[bcdfghjklmnpqrstvwxzBCDFGHJKLMNPQRSTVWXZ]?\s*[aeyouiAEYOUI]/g ;
         sylText = sylText.replaceAll(/\s/g , "");
         const digits = sylText.match(re);
         exponent = BigInt(digits.length - 1);
@@ -163,8 +163,8 @@
       <p>
         which corresponds to both:
         <ul>
-          <li>nsec1epd0htx08c0wgz7u6us6ntgngy6ywaw4ztulvk3fmqpmyadvju5qc73str</li>
-          <li>c85afbaccf3e1ee40bdcd721a9ad1341344775d512f9f65a29d803b275ac9728</li>
+          <li>nsec1epd0htx08c0wgz7u6us6ntgngy6ywaw4rpqwlsz3rcqc9t5j778q75xnrg</li>
+          <li>c85afbaccf3e1ee40bdcd721a9ad1341344775d51840efc0511e0182ae92f78e</li>
         </ul>
         </p>
     </div>
