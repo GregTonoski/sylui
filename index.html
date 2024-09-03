@@ -136,12 +136,12 @@
         let exponent= BigInt(0);
         let addend = BigInt(0);
         let radix = BigInt(126);
-        const re = /[bcdfghjklmnpqrstvwxzBCDFGHJKLMNPQRSTVWXZ]?\s*[aeyouiAEYOUI]/g ;
+        const re = /[bcdfghjklmnpqrstvwxz]?\s*[aeyoui]/gi ;
         sylText = sylText.replaceAll(/\s/g , "");
         const digits = sylText.match(re);
         exponent = BigInt(digits.length - 1);
         for (const digit of digits) {
-          addend = BigInt(syllables.indexOf(digit));
+          addend = BigInt(syllables.indexOf(digit.toLowerCase()));
           addend = addend*radix**exponent;
           number = number + addend;
           exponent--;
