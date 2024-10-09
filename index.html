@@ -127,6 +127,10 @@
           inputSylUI.className = "invalid";
           error.textContent = "Incorrect SylUI code entered.";
           error.className = "error active";
+        } else if (inputSylUI.value.length === 0) {
+          document.getElementById("userInputText1").value = 'duboli kufuzu naleqy lyfety dohihy rutoqa rageli kilyly vetyka himujy teluzi fuoda va';
+          document.getElementById("textInputCharacters").innerHTML = '73 characters in total.';
+          document.getElementById("outputParagraph").innerHTML = 'Hex code (64 characters):<br><output>c85afbaccf3e1ee40bdcd721a9ad1341344775d51840efc0511e0182ae92f78e</output>';
         } else {
           inputSylUI.className = "valid";
           error.textContent = "";
