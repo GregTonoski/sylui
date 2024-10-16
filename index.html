@@ -92,7 +92,7 @@
     </p>
     <script>
       const form = document.querySelector("form");
-      const inputSylUI = document.getElementById("userInputText1");
+      let inputSylUI = document.getElementById("userInputText1");
       const error = inputSylUI.nextElementSibling;
       const inputSylUIRegExp = /^[bcdfghjklmnpqrstvwxzBCDFGHJKLMNPQRSTVWXZ]?\s*(?:[aeyouiAEYOUI]\s*[bcdfghjklmnpqrstvwxzBCDFGHJKLMNPQRSTVWXZ]?\s*)*$/;
       const submitRegExp = /^(?:[bcdfghjklmnpqrstvwxzBCDFGHJKLMNPQRSTVWXZ]?\s*[aeyouiAEYOUI]\s*)*$/;
@@ -127,14 +127,15 @@
           inputSylUI.className = "invalid";
           error.textContent = "Incorrect SylUI code entered.";
           error.className = "error active";
-        } else if (inputSylUI.value.length === 0) {
-          document.getElementById("userInputText1").value = 'duboli kufuzu naleqy lyfety dohihy rutoqa rageli kilyly vetyka himujy teluzi fuoda va';
-          document.getElementById("textInputCharacters").innerHTML = '73 characters in total.';
-          document.getElementById("outputParagraph").innerHTML = 'Hex code (64 characters):<br><output>c85afbaccf3e1ee40bdcd721a9ad1341344775d51840efc0511e0182ae92f78e</output>';
         } else {
           inputSylUI.className = "valid";
           error.textContent = "";
           error.className = "error";
+          if (inputSylUI.value.length === 0) {
+            document.getElementById("userInputText1").value = randomSylUI();
+            inputSylUI = document.getElementById("userInputText1");
+          }
+          document.getElementById("textInputCharacters").innerHTML = inputSylUI.value.match(/\S/g).length + ' characters in total.';
           const numberHex = sylUI2Hex(inputSylUI.value);
           document.getElementById("outputParagraph").innerHTML = 'Hex code (' + numberHex.match(/\S/g).length + ' characters):<br><output>' + numberHex + '</output>';
         }
@@ -157,6 +158,17 @@
           addend = 0;
         }
         return number.toString(16);
+      }
+      function randomSylUI() {
+        let str = '';
+        // 36 syllables encode numbers of size up to 252 bits. 37 syllables encode slighly more than 256 bits.
+        for (let i = 1; i <= 36; i++) {
+          str = str + syllables[Math.floor(Math.random()*syllables.length)];
+          if (! (i % 3)) {
+            str = str + ' ';
+          }
+        }
+        return str;
       }
     </script>
     </div>
